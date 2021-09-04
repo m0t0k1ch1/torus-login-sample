@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { ethers } from 'ethers';
-import Torus, { UserInfo } from '@toruslabs/torus-embed';
+import Torus, { UserInfo, TorusPublicKey } from '@toruslabs/torus-embed';
 
 import { User } from '../interface/User';
 
@@ -61,14 +60,28 @@ export class AuthService {
           this.torus
             .getUserInfo('')
             .then((userInfo: UserInfo) => {
-              subscriber.next({
-                name: userInfo.name,
-                email: userInfo.email,
-                profileImage: userInfo.profileImage,
-                verifier: userInfo.verifier,
-                verifierID: userInfo.verifierId,
-              });
-              subscriber.complete();
+              this.torus
+                .getPublicAddress({
+                  verifier: 'google',
+                  verifierId: userInfo.verifierId,
+                })
+                .then((addressOrPubkey: string | TorusPublicKey) => {
+                  subscriber.next({
+                    address:
+                      typeof addressOrPubkey === 'string'
+                        ? addressOrPubkey
+                        : addressOrPubkey.address,
+                    name: userInfo.name,
+                    email: userInfo.email,
+                    profileImage: userInfo.profileImage,
+                    verifier: userInfo.verifier,
+                    verifierID: userInfo.verifierId,
+                  });
+                  subscriber.complete();
+                })
+                .catch((e) => {
+                  subscriber.error(e);
+                });
             })
             .catch((e) => {
               subscriber.error(e);
@@ -86,7 +99,9 @@ export class AuthService {
       this.init().subscribe(
         () => {
           this.torus
-            .login()
+            .login({
+              verifier: 'google',
+            })
             .then(() => {
               subscriber.next();
               subscriber.complete();
