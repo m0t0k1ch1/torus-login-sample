@@ -24,11 +24,23 @@ export class AuthenticatedGuard implements CanActivate {
     | Promise<boolean | UrlTree>
     | boolean
     | UrlTree {
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['signin']);
-      return false;
-    }
+    return new Observable<boolean>((subscriber) => {
+      this.authService.isAuthenticated().subscribe(
+        (isAuthenticated: boolean) => {
+          if (!isAuthenticated) {
+            this.router.navigate(['signin']);
+            subscriber.next(false);
+            subscriber.complete();
+            return;
+          }
 
-    return true;
+          subscriber.next(true);
+          subscriber.complete();
+        },
+        (err) => {
+          subscriber.error(err);
+        }
+      );
+    });
   }
 }

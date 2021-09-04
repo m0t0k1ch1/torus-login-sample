@@ -2,15 +2,8 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { OPENLOGIN_NETWORK } from '@toruslabs/openlogin';
-
 export const environment = {
   production: false,
-  torus: {
-    clientID:
-      'BI1IOOJopY1NFX_Pq16WVfitWqYEAEoIe1CUl_ceT-uLgfkwZbGDu1FIJwnPgde9i1HUtm0B1-jzfu9VML2pjhM',
-    network: OPENLOGIN_NETWORK.TESTNET,
-  },
 };
 
 /*

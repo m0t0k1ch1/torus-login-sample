@@ -1,3 +1,8 @@
-<div class="page" fxLayout="column" fxLayoutAlign="center center">
-  <h2>Home</h2>
+<div *ngIf="!user" class="page" fxLayout="column" fxLayoutAlign="center center">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="user" class="page" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+  <img [src]="user.profileImage">
+  <span>{{ user.email }}</span>
+  <button mat-stroked-button (click)="logout()">Logout</button>
 </div>

@@ -2,11 +2,8 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
     "outDir": "./out-tsc/app",
-    "paths": {
-      "crypto": ["./node_modules/crypto-browserify"],
-      "stream": ["./node_modules/stream-browserify"]
-    },
     "types": []
   },
   "files": ["src/main.ts", "src/polyfills.ts"],

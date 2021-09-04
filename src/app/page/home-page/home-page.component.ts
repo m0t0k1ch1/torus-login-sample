@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { User } from 'src/app/interface/User';
+import { AuthService } from 'src/app/service/auth.service';
+import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
   selector: 'app-home-page',
@@ -6,7 +11,33 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
-  constructor() {}
+  public user: User | undefined;
 
-  ngOnInit(): void {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private notificationService: NotificationService
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.getUser().subscribe(
+      (user: User) => {
+        this.user = user;
+      },
+      (err) => {
+        this.notificationService.error(err);
+      }
+    );
+  }
+
+  public logout(): void {
+    this.authService.logout().subscribe(
+      () => {
+        this.router.navigate(['signin']);
+      },
+      (err) => {
+        this.notificationService.error(err);
+      }
+    );
+  }
 }
