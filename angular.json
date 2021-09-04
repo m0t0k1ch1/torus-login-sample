@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "torus": {
+    "torus-login-sample": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/torus",
+            "outputPath": "dist/torus-login-sample",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -73,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "torus:build:production"
+              "browserTarget": "torus-login-sample:build:production"
             },
             "development": {
-              "browserTarget": "torus:build:development"
+              "browserTarget": "torus-login-sample:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "torus:build"
+            "browserTarget": "torus-login-sample:build"
           }
         },
         "test": {
@@ -106,5 +106,5 @@
       }
     }
   },
-  "defaultProject": "torus"
+  "defaultProject": "torus-login-sample"
 }
