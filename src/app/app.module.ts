@@ -7,9 +7,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
+import { SigninPageComponent } from './page/signin-page/signin-page.component';
+import { HomePageComponent } from './page/home-page/home-page.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, SigninPageComponent, HomePageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
