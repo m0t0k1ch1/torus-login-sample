@@ -21,7 +21,6 @@ export class SigninPageComponent implements OnInit {
   public login(): void {
     this.authService.login().subscribe(
       () => {
-        console.log('hogepi');
         this.router.navigate(['']);
       },
       (err) => {
