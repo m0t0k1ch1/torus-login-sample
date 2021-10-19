@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import Torus, { UserInfo, TorusPublicKey } from '@toruslabs/torus-embed';
+import Torus, { TorusPublicKey, UserInfo } from '@toruslabs/torus-embed';
+import Web3 from 'web3';
 
 import { User } from '../interface/User';
 
@@ -114,6 +115,26 @@ export class AuthService {
           subscriber.error(err);
         }
       );
+    });
+  }
+
+  public sign(): Observable<string> {
+    return new Observable<string>((subscriber) => {
+      this.init().subscribe(() => {
+        const web3 = new Web3(this.torus.provider as any);
+        web3.eth
+          .sign(
+            'message to be signed',
+            '0x0ad2b05b75A76F61054824F6bA03b231Fc825177'
+          )
+          .then((sig: string) => {
+            subscriber.next(sig);
+            subscriber.complete();
+          })
+          .catch((e) => {
+            subscriber.error(e);
+          });
+      });
     });
   }
 

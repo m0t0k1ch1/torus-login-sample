@@ -21,23 +21,22 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.authService.getUser().subscribe(
-      (user: User) => {
-        this.user = user;
-      },
-      (err) => {
-        this.notificationService.error(err);
-      }
+      (user: User) => (this.user = user),
+      (err) => this.notificationService.error(err)
+    );
+  }
+
+  public sign(): void {
+    this.authService.sign().subscribe(
+      (sig) => console.log(sig),
+      (err) => this.notificationService.error(err)
     );
   }
 
   public logout(): void {
     this.authService.logout().subscribe(
-      () => {
-        this.router.navigate(['signin']);
-      },
-      (err) => {
-        this.notificationService.error(err);
-      }
+      () => this.router.navigate(['signin']),
+      (err) => this.notificationService.error(err)
     );
   }
 }
