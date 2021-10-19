@@ -118,22 +118,24 @@ export class AuthService {
     });
   }
 
-  public sign(): Observable<string> {
+  public sign(message: string): Observable<string> {
     return new Observable<string>((subscriber) => {
       this.init().subscribe(() => {
-        const web3 = new Web3(this.torus.provider as any);
-        web3.eth
-          .sign(
-            'message to be signed',
-            '0x0ad2b05b75A76F61054824F6bA03b231Fc825177'
-          )
-          .then((sig: string) => {
-            subscriber.next(sig);
-            subscriber.complete();
-          })
-          .catch((e) => {
-            subscriber.error(e);
-          });
+        this.getUser().subscribe(
+          (user: User) => {
+            const web3 = new Web3(this.torus.provider as any);
+            web3.eth
+              .sign(message, user.address)
+              .then((sig: string) => {
+                subscriber.next(sig);
+                subscriber.complete();
+              })
+              .catch((e) => {
+                subscriber.error(e);
+              });
+          },
+          (err) => subscriber.error(err)
+        );
       });
     });
   }

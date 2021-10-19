@@ -27,7 +27,7 @@ export class HomePageComponent implements OnInit {
   }
 
   public sign(): void {
-    this.authService.sign().subscribe(
+    this.authService.sign('message to be signed').subscribe(
       (sig) => console.log(sig),
       (err) => this.notificationService.error(err)
     );
