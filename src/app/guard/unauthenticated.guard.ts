@@ -8,13 +8,13 @@ import {
 } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { AuthService } from 'src/app/service/auth.service';
+import { Web3Service } from 'src/app/service/web3.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UnauthenticatedGuard implements CanActivate {
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private web3Service: Web3Service) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -25,7 +25,7 @@ export class UnauthenticatedGuard implements CanActivate {
     | boolean
     | UrlTree {
     return new Observable<boolean>((subscriber) => {
-      this.authService.isAuthenticated().subscribe(
+      this.web3Service.isAuthenticated().subscribe(
         (isAuthenticated: boolean) => {
           if (isAuthenticated) {
             this.router.navigate(['']);

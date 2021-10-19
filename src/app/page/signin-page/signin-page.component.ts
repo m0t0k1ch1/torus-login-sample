@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from 'src/app/service/auth.service';
+import { Web3Service } from 'src/app/service/web3.service';
 import { NotificationService } from 'src/app/service/notification.service';
 
 @Component({
@@ -12,14 +12,14 @@ import { NotificationService } from 'src/app/service/notification.service';
 export class SigninPageComponent implements OnInit {
   constructor(
     private router: Router,
-    private authService: AuthService,
+    private web3Service: Web3Service,
     private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {}
 
   public login(): void {
-    this.authService.login().subscribe(
+    this.web3Service.login().subscribe(
       () => {
         this.router.navigate(['']);
       },

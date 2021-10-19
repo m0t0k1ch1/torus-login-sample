@@ -3,13 +3,14 @@ import { Observable } from 'rxjs';
 
 import Torus, { TorusPublicKey, UserInfo } from '@toruslabs/torus-embed';
 import Web3 from 'web3';
+import { TransactionConfig, TransactionReceipt } from 'web3-core';
 
 import { User } from '../interface/User';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
+export class Web3Service {
   private isInitialized: boolean = false;
   private torus: Torus;
 
@@ -34,9 +35,7 @@ export class AuthService {
           subscriber.next();
           subscriber.complete();
         })
-        .catch((e) => {
-          subscriber.error(e);
-        });
+        .catch((e) => subscriber.error(e));
     });
   }
 
@@ -47,9 +46,7 @@ export class AuthService {
           subscriber.next(this.torus.isLoggedIn);
           subscriber.complete();
         },
-        (err) => {
-          subscriber.error(err);
-        }
+        (err) => subscriber.error(err)
       );
     });
   }
@@ -80,17 +77,11 @@ export class AuthService {
                   });
                   subscriber.complete();
                 })
-                .catch((e) => {
-                  subscriber.error(e);
-                });
+                .catch((e) => subscriber.error(e));
             })
-            .catch((e) => {
-              subscriber.error(e);
-            });
+            .catch((e) => subscriber.error(e));
         },
-        (err) => {
-          subscriber.error(err);
-        }
+        (err) => subscriber.error(err)
       );
     });
   }
@@ -107,13 +98,9 @@ export class AuthService {
               subscriber.next();
               subscriber.complete();
             })
-            .catch((e) => {
-              subscriber.error(e);
-            });
+            .catch((e) => subscriber.error(e));
         },
-        (err) => {
-          subscriber.error(err);
-        }
+        (err) => subscriber.error(err)
       );
     });
   }
@@ -130,13 +117,41 @@ export class AuthService {
                 subscriber.next(sig);
                 subscriber.complete();
               })
-              .catch((e) => {
-                subscriber.error(e);
-              });
+              .catch((e) => subscriber.error(e));
           },
           (err) => subscriber.error(err)
         );
       });
+    });
+  }
+
+  public sendTx(tx: TransactionConfig): Observable<string> {
+    return new Observable<string>((subscriber) => {
+      this.init().subscribe(
+        () => {
+          this.getUser().subscribe(
+            (user: User) => {
+              tx.from = user.address;
+
+              const web3 = new Web3(this.torus.provider as any);
+              web3.eth
+                .sendTransaction(tx)
+                // .on('transactionHash', (txHash: string) => {})
+                // .on('receipt', (receipt: TransactionReceipt) => {})
+                .on(
+                  'confirmation',
+                  (confNum: number, receipt: TransactionReceipt) => {
+                    subscriber.next(receipt.transactionHash);
+                    subscriber.complete();
+                  }
+                )
+                .on('error', (err) => subscriber.error(err));
+            },
+            (err) => subscriber.error(err)
+          );
+        },
+        (err) => subscriber.error(err)
+      );
     });
   }
 
@@ -150,13 +165,9 @@ export class AuthService {
               subscriber.next();
               subscriber.complete();
             })
-            .catch((e) => {
-              subscriber.error(e);
-            });
+            .catch((e) => subscriber.error(e));
         },
-        (err) => {
-          subscriber.error(err);
-        }
+        (err) => subscriber.error(err)
       );
     });
   }
